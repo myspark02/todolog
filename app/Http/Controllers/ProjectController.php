@@ -13,7 +13,11 @@ class ProjectController extends Controller
      */
     public function index()
     {
-        //
+        $user = \Auth::user();
+        //$projects = $user->projects();
+        $projects = \App\Project::where('user_id', $user->id)->orderBy('updated_at', 'desc')->get();
+
+        return view('project.index')->with('projects', $projects);
     }
 
     /**
@@ -23,7 +27,7 @@ class ProjectController extends Controller
      */
     public function create()
     {
-        //
+        return view('project.create');
     }
 
     /**
@@ -34,7 +38,18 @@ class ProjectController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $proj = new \App\Project([
+            'name' => $request->get('name'), 
+            'description' => $request->get('description'),
+        ]);
+
+        $user = \Auth::user();
+
+        $proj->user_id = $user->id;
+
+        $proj->save();
+
+        return redirect('/project')->with('message', $proj->name . " 이 생성되었습니다.");
     }
 
     /**
@@ -45,7 +60,12 @@ class ProjectController extends Controller
      */
     public function show($id)
     {
-        //
+        $proj = \App\Project::find($id);
+        if($proj == null) {
+            abort(404, $id . ' 모델을 찾을 수 가 없습니다.');
+        }
+
+        return view('project.show')->with('proj', $proj);
     }
 
     /**
@@ -56,8 +76,10 @@ class ProjectController extends Controller
      */
     public function edit($id)
     {
-        //
-    }
+        $proj = \App\Project::findOrFail($id);
+
+        return view('project.edit')->with('proj', $proj);
+    }   
 
     /**
      * Update the specified resource in storage.
@@ -68,7 +90,15 @@ class ProjectController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+       $proj = \App\Project::findOrFail($id);
+
+       $proj->update([
+            'name' =>$request->get('name'),
+            'description' => $request->get('description'),
+       ]);
+
+       return redirect('/project')->with('message', $proj->name . '프로젝트가 수정되었습니다.');
+
     }
 
     /**
@@ -79,6 +109,14 @@ class ProjectController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $proj = \App\Project::findOrFail($id);
+
+        foreach($proj->tasks as $task) {
+            $task->delete();
+        }
+
+        $proj->delete();
+
+        return redirect('/project')->with('message', '프로젝트 ' . $proj->name . ' 이 삭제되었습니다.');
     }
 }
