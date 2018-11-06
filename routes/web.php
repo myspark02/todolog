@@ -15,9 +15,6 @@ Route::get('/', 'WelcomeController@index');
 
 Route::get('/home', 'HomeController@index')->name('home');
 
-
-Route::get('task', function(){return 'task';});
-
 Auth::routes();
 
 Route::get('login/github', 'Auth\LoginController@redirectToProvider');
@@ -25,5 +22,6 @@ Route::get('login/github/callback', 'Auth\LoginController@handleProviderCallback
 Route::group(['middleware' => 'auth'], function(){
 	Route::resource('project', 'ProjectController');	
 	Route::resource('project.task', 'ProjectTaskController');
+	Route::resource('task', 'TaskController', ['only'=>['index', 'show']]);
 });
 
