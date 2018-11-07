@@ -38,6 +38,10 @@ class ProjectController extends Controller
      */
     public function store(Request $request)
     {
+        $this->validate($request, [
+            'name' => 'required|max:20',
+        ]);
+
         $proj = new \App\Project([
             'name' => $request->get('name'), 
             'description' => $request->get('description'),

@@ -6,6 +6,15 @@
 
 @section('content')
 	<div class="col-md-12">
+		@if(count($errors) > 0)
+		<div class="alert alert-danger">
+			<ul>
+				@foreach($errors->all() as $error)
+					<li>{{$error}}</li>
+				@endforeach
+			</ul>
+		</div>
+		@endif		
 		<h3> 프로젝트 등록</h3>
 		<form class="form-horizontal" role="form" method="POST"
 			action="{{route('project.store')}}">

@@ -38,7 +38,7 @@
 				<label for="priority">우선순위</label>
 				<div>
 					<select class="form-control" name="priority" id="priority">
-						@foreach(['낮음', '보통', '높음'] as $p)
+						@foreach(['낮음', '보통', '높음', '즉시'] as $p)
 							<option value="{{$p}}" {{old('priority')==$p ? 'selected':''}}>{{$p}}</option>
 						@endforeach
 					</select>

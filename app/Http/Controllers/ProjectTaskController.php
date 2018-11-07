@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Http\Requests\StoreTaskRequest;
 
 class ProjectTaskController extends Controller
 {
@@ -14,7 +15,7 @@ class ProjectTaskController extends Controller
     public function index($projectId)
     {
         $proj = \App\Project::findOrFail($projectId);
-        $tasks = $proj->tasks()->get();
+        $tasks = $proj->tasks()->orderBy('created_at', 'desc')->get();
 
         return view('project.task.index')->with('tasks', $tasks)
                                         ->with('proj', $proj);
@@ -39,8 +40,9 @@ class ProjectTaskController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, $projectId)
+    public function store(StoreTaskRequest $request, $projectId)
     {
+
         $task = new \App\Task([
             'name'=> $request->get('name'),
             'description' =>$request->get('description'),

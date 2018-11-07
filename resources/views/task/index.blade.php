@@ -125,5 +125,8 @@
 				@endforeach
 			</tobody>
 		</table>
+		<div class="text-center">
+			{{$tasks->appends(['start_date'=>$start_date, 'end_date'=>$end_date, 'status'=>$status, 'priority'=>$priority])->links()}}
+		</div>	
 
 @endsection

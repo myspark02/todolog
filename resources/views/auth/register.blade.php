@@ -70,7 +70,9 @@
 
                                 @if ($errors->has('phone'))
                                     <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $errors->first('phone') }}</strong>
+                                        @foreach($errors->get('phone') as $error)
+                                        <strong>{{ $error }}</strong>
+                                        @endforeach
                                     </span>
                                 @endif
                             </div>

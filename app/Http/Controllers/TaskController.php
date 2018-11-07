@@ -29,11 +29,16 @@ class TaskController extends Controller
 
         $tasks = $user->tasks()->dueDateBetween($start_date, $end_date)
                                 ->otherParam($request)
-                                ->orderBy('due_date', 'desc')->get();
+                                ->with('project')       //immediate loading, to avoid N+1 problem
+                                ->orderBy('due_date', 'desc')
+                                ->paginate(5);
+                                //->get();
+
+       //$page = (null != $request->get('page'))?$request->get('page'):1;   
 
         return view('task.index')->with('tasks', $tasks)
-                        ->with('start_date', $start_date)
-                        ->with('end_date', $end_date)
+                        ->with('start_date', $start_date->toDateTimeString())
+                        ->with('end_date', $end_date->toDateTimeString())
                         ->with('status', $request->get('status'))
                         ->with('priority', $request->get('priority'));
     }

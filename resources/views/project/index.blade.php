@@ -9,11 +9,7 @@
 		<p>
 			<a href="{{route('project.create')}}" class="btn btn-success">프로젝트 생성</a>
 		</p>
-		@if(Session::has('message'))
-			<div class="alert alert-info">
-				{{Session::get('message')}}
-			</div>
-		@endif
+	
 
 		<table class="table table-stiped">
 			<thead>
