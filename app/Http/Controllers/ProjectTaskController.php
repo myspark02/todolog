@@ -53,6 +53,12 @@ class ProjectTaskController extends Controller
 
         $task->project()->associate($projectId);
         $task->save();
+      
+        $drv = \Config::get('cache.default');
+
+        if ($drv == 'redis') {
+            \Redis::incr('task:count');
+        }
 
         return redirect(route('project.task.index', $task->project->id))->with('message', $task->name . '가 생성되었습니다.');
     }
@@ -156,7 +162,12 @@ class ProjectTaskController extends Controller
              abort(403, '잘못된 태스크 접근입니다.');
         }
         $task->delete();
+       
+        $drv = \Config::get('cache.default');
 
+        if ($drv == 'redis') {
+            \Redis::decr('task:count');
+        }       
         return redirect(route('project.task.index', $task->project->id))
                 ->with('message', 'Task ' . $task->name . ' 이 삭제되었습니다.');
     }

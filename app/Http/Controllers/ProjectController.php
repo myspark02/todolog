@@ -53,6 +53,12 @@ class ProjectController extends Controller
 
         $proj->save();
 
+        $drv = \Config::get('cache.default');
+
+        if ($drv == 'redis') {
+            \Redis::incr('project:count');
+        }
+
         return redirect('/project')->with('message', $proj->name . " 이 생성되었습니다.");
     }
 
@@ -120,6 +126,12 @@ class ProjectController extends Controller
         }
 
         $proj->delete();
+
+        $drv = \Config::get('cache.default');
+
+        if ($drv == 'redis') {
+            \Redis::decr('project:count');
+        }       
 
         return redirect('/project')->with('message', '프로젝트 ' . $proj->name . ' 이 삭제되었습니다.');
     }

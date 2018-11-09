@@ -14,6 +14,7 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         //
+        Commands\SendReminderEmail::class, //추가 
     ];
 
     /**
@@ -26,6 +27,14 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')
         //          ->hourly();
+        /*
+        $schedule->call(function(){
+            \Log::info('scheduler running. ');
+        })->everyMinute();
+        */
+        $schedule->command('reminder:email 1 --due=7')
+                ->daily()->withoutOverlapping()
+                ->appendOutputTo('storage/logs/reminder-email.log');
     }
 
     /**

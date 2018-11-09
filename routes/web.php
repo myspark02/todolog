@@ -25,3 +25,4 @@ Route::group(['middleware' => 'auth'], function(){
 	Route::resource('task', 'TaskController', ['only'=>['index', 'show']]);
 });
 
+Route::get('/reminder/{userId}/{dueInDays?}', 'ReminderController@sendEmailReminder');

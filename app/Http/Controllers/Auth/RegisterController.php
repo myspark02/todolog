@@ -63,7 +63,13 @@ class RegisterController extends Controller
      * @return \App\User
      */
     protected function create(array $data)
-    {
+    {   
+        $drv = \Config::get('cache.default');
+
+        if ($drv == 'redis') {
+            \Redis::incr('user:count');
+        }
+        
         return User::create([
             'name' => $data['name'],
             'email' => $data['email'],
